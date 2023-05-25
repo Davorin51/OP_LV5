@@ -1,0 +1,86 @@
+# Python Server
+
+import socket
+
+def start_server():
+    host = "localhost"  # local machine name or IP
+    port = 12345  # port to listen
+
+    server_socket = socket.socket()  # create a socket object
+    server_socket.bind((host, port))  # bind the port
+
+    server_socket.listen(1)  # listen for a client
+    print("Waiting for a connection...")
+
+    conn, addr = server_socket.accept()  # Establish connection with client.
+    print("Connected by ", addr)
+    
+    message_to_send = "Hello from Python Server!"
+    conn.send(message_to_send.encode())  # send a message to the client
+
+    conn.close()  # close the connection
+
+if __name__ == "__main__":
+    start_server()
+
+
+
+
+
+
+// C# Client
+
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Windows.Forms;
+
+public partial class Form1 : Form
+{
+    public Form1()
+    {
+        InitializeComponent();
+    }
+
+    private void connectToServerButton_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            Int32 port = 12345;
+            string server = "localhost";
+
+            // Translate the server's hostname to an IP Address
+            IPAddress localAddr = IPAddress.Parse(server);
+
+            // Create a TCP/IP socket
+            TcpClient client = new TcpClient(server, port);
+
+            // Get a client stream for reading and writing
+            NetworkStream stream = client.GetStream();
+
+            // Read the first batch of the TcpServer's response bytes
+            Byte[] data = new Byte[256];
+            String responseData = String.Empty;
+
+            Int32 bytes = stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+
+            // Display the response data in the Label or TextBox
+            responseLabel.Text = responseData;
+
+            // Close the socket
+            stream.Close();
+            client.Close();
+        }
+        catch (ArgumentNullException ex)
+        {
+            Console.WriteLine("ArgumentNullException: {0}", ex);
+        }
+        catch (SocketException ex)
+        {
+            Console.WriteLine("SocketException: {0}", ex);
+        }
+    }
+}
+
